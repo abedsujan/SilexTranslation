@@ -2,7 +2,7 @@
 /**
  * @file
  *
- * @copyright Copyright (c) 2016 abedsujan.com
+ * @copyright Copyright (c) 2014 Palantir.net
  */
 
 namespace MonoSolutions;
@@ -38,38 +38,50 @@ class Application extends SilexApplication
             $instruction = 'Mono Translation <br />
            <ul>
            <li>use following example routes: <ul>
-            <li>/{lang_code}/{lang_message}/{name}</li>
-            <li>/en/hello/Svinn</li>
-            <li>/da/goodbye/Svinn</li>
-            <li>/dkk/goodbye/Svinn (Fallback to Danish translation)</li>
+            <li>/{lang_code}/{reseller_id}/{lang_message}/{name}</li>
+            <li>/en/reseller_001/hello/Svinn</li>
+            <li>/da/reseller_002/goodbye/Svinn</li>
+            <li>/dkk/reseller_001/goodbye/Svinn (Fallback to Danish translation)</li>
            </ul></li>
 
            ';
             return $instruction;
         });
 
-
         $app['translator.domains'] = array(
-            'messages' => array(
+            'reseller_001' => array(
                 'en' => array(
-                    'hello' => 'Hello %name%!  Welcome to MoNo.',
-                    'goodbye' => 'Goodbye %name%. See you soon.',
+                    'hello' => '[ Reseller_001 - Translation ] Hello %name%!  Welcome to MoNo',
+                    'goodbye' => '[ Reseller_001 - Translation ] Goodbye %name%. See you soon.',
                 ),
                 'da' => array(
-                    'hello' => 'Hej %name%. Velkommen til MoNo.',
-                    'goodbye' => 'Favel %name%. Vi ses igen.',
+                    'hello' => '[ Reseller_001 - Translation ] Hej %name%. Velkommen til MoNo.',
+                    'goodbye' => '[ Reseller_001 - Translation ] Favel %name%. Vi ses igen.',
                 ),
                 'fr' => array(
-                    'hello' => 'Bonjour %name%',
-                    'goodbye' => 'Au revoir %name%',
+                    'hello' => '[ Reseller_001 - Translation ] Bonjour %name%',
+                    'goodbye' => '[ Reseller_001 - Translation ] Au revoir %name%',
                 ),
             ),
+	        'reseller_002' => array(
+		        'en' => array(
+			        'hello' => 'Hi %name%!  Welcome to MoNo',
+			        'goodbye' => 'Goodbye %name%. See you soon.',
+		        ),
+		        'da' => array(
+			        'hello' => 'Hejjjj  %name%. Velkommen til MoNo.',
+			        'goodbye' => 'Favel %name%. Vi ses igen.',
+		        ),
+		        'fr' => array(
+			        'hello' => 'Bonjour Bonjour %name%',
+			        'goodbye' => 'Au revoir %name%',
+		        ),
+	        ),
         );
 
-        $app->get('/{_locale}/{message}/{name}', function ($message, $name) use ($app) {
+        $app->get('/{_locale}/{reseller}/{message}/{name}', function ($reseller, $message, $name) use ($app) {
 
-            return $app['translator']->trans($message, array('%name%' => $name));
+            return $app['translator']->trans($message, array('%name%' => $name), $reseller);
         });
-
     }
 }
